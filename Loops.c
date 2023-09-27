@@ -14,5 +14,5 @@
         printf("Print x after x-- is applied: %d\n", x);
         printf("Print x again: %d\n", x);
         printf("After --x: %d\n", --x);  // Prefix decrement  
-        }
+    }
     

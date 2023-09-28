@@ -9,4 +9,8 @@ int main() {
         printf("Inside the for loop : y = %d\n", y);
         printf("Inside the for loop : x = %d\n", x);
     }
+
+    // Note: You cannot access 'y' here, it's out of scope
+    //printf("Outside the for loop : y = %d\n", y);
+    printf("After the for loop : x = %d\n", x);
 }

@@ -77,10 +77,10 @@ int main() {
     //Counter variable to keep track of how many cells are revealed
     int CellsRevealed = 0;
     //Bolean variable to change in any conditions that the game has to terminate
-    int isGameOver = 0;
+    int Bool = 0;
 
     //Run the game while checking all the necessary conditions to see if the user inputs are valid, and see if the game is over
-    while(!isGameOver){
+    while(Bool=0){
         UpdateBoard(board);
         int x,y;
         printf("Welcome to Minesweeper! Let the game begin!");
@@ -97,7 +97,7 @@ int main() {
         }
         if(board[x][y]=='X'){
             printf("Game Over! You just hit a bomb.\n");
-            isGameOver = 1;
+            Bool = 1;
         }
         else{
             int NumberOfBombs = countAdjacentBombs(board, x, y);
@@ -106,7 +106,7 @@ int main() {
 
             if(CellsRevealed == SIZE*SIZE-BOMBS){
                 printf("Congratulations you won!");
-                isGameOver = 1;
+                Bool = 1;
             }
         }
     }

@@ -1,23 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
 //Define the variables size and bombs that are global variables used throughout the program
 #define SIZE 10
 #define BOMBS 15
 
-//Function to replace 15 random locations with "X" to indicate a bomb
+//Function to replace 15 random locations with "X" in the array to indicate a bomb
 void placeBombs(char board[SIZE][SIZE]) {
-    //Allows for seed value to be different every time so the sequence of random numbers generated is unique 
+    //Allows for seed value to be different every time so the sequence of random numbers generated is unique
     srand(time(NULL));
     //Number of bombs placed has to initially equal zero so bombs can start being placed
     int placedBombs = 0;
-    //While the number of bombs placed is less than the required number of bombs
+     //While the number of bombs placed is less than the required number of bombs generate random 
+     //x,y coordinates within the board range and if a bomb has not been placed there, place a bomb
     while (placedBombs < BOMBS) {
-        //generate random x,y coordinates within the board range and if a bomb has not been placed there, place a bomb
         int x = rand() % SIZE;
         int y = rand() % SIZE;
-
         if (board[x][y] != 'X') {
             board[x][y] = 'X';
             placedBombs++;
@@ -25,35 +23,45 @@ void placeBombs(char board[SIZE][SIZE]) {
     }
 }
 
-//Function to check if the input entered by a user as a move is within the range of the board
+//Function to check if the input entered by a user as a move is within the range of the board, and in the appropriate format
 int CheckValidMove(int x, int y) {
-    return x>= 0 && x<SIZE && y>=0 && y<SIZE;
-} 
+    return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
+}
 
 //Function to count the bombs adjacent to a valid location entered by the user if it is not a bomb
 int countAdjacentBombs(char board[SIZE][SIZE], int x, int y) {
-    int counter = 0; 
-    for(int i=-1; i<=1; i++) {
-        for(int j= -1 ;j <=1; j++) {
-            if(CheckValidMove(x+i, y+j) && board[x+i][y+j]=='X') {
+    //Number of Bombs initially counted is zero
+    int counter = 0;
+    //Iterate through each row of the board
+    for (int i = -1; i <= 1; i++) {
+        //Iterate through each column of the board
+        for (int j = -1; j <= 1; j++) {
+            //If a location is valid and there is a bomb at that location add 1 to the counter
+            if (CheckValidMove(x + i, y + j) && board[x + i][y + j] == 'X') {
                 counter++;
             }
         }
     }
-    return counter; 
+    return counter;
 }
 
 //Function to construct updated board after every valid attempt
 void UpdateBoard(char board[SIZE][SIZE]) {
     //print the Column headers of the mineswweper board
-    printf(" 0 1 2 3 4 5 6 7 8 9\n");
+    printf("  0 1 2 3 4 5 6 7 8 9\n");
     //iterate through each row of the board array
     for (int x = 0; x < SIZE; x++) {
         //print the row index to help identify each row
-        printf("%d ", x);
+        printf("%d ", x); 
         //iterate through each column of a given row and print the correspond value at location [row, column]
-        for(int y=0; y < SIZE; y++) {
-            printf("%c", board[x][y]);
+        for (int y = 0; y < SIZE; y++) {
+            if (board[x][y] == 'X') {
+                printf(" -");
+            } else if (board[x][y] == '-') {
+                printf(" -");
+            } else {
+                printf(" %c", board[x][y]);
+            }
         }
         printf("\n");
     }
@@ -61,11 +69,10 @@ void UpdateBoard(char board[SIZE][SIZE]) {
 
 int main() {
     char board[SIZE][SIZE];
-
     //Create the empty poard without any bombs at the start of the game
-    for(int x = 0; x < SIZE; x++){
-        for(int y = 0; y < SIZE; y++){
-            board[x][y]='-';
+    for (int x = 0; x < SIZE; x++) {
+        for (int y = 0; y < SIZE; y++) {
+            board[x][y] = '-';
         }
     }
     //Place the bombs 
@@ -73,36 +80,36 @@ int main() {
     //Counter variable to keep track of how many cells are revealed
     int CellsRevealed = 0;
     //Bolean variable to change in any conditions that the game has to terminate
-    int Bool = 0;
+    int GameNotOver = 0;
 
-    //Run the game while checking all the necessary conditions to see if the user inputs are valid, and see if the game is over
-    while(Bool==0){
+    printf("Welcome to Minesweeper! Let the game begin!\n");
+    while (GameNotOver == 0) {
         UpdateBoard(board);
-        int x,y;
-        printf("Welcome to Minesweeper! Let the game begin!");
-        printf("Enter Row and Column (0 to 9) seperated by a space: ");
-        scanf("%d %d", &x, &y);
+        int x, y;
+        printf("Enter Row and Column (0 to 9) separated by a space: ");
+        scanf(" %d %d", &x, &y);
 
-        if(!CheckValidMove(x,y)){
-            printf("Invalid Move! \n Please enter a row and column between 0 to 9 without any additional characters and seperated by a single space\n");
+        if (!CheckValidMove(x, y)) {
+            printf("Invalid Move! Please enter a row and column between 0 to 9 separated by a single space.\n");
             continue;
         }
-        if (board[x][y] != '-' && board[x][y] != 'X') {
+
+        if (board[x][y] != '-') {
             printf("This cell is already revealed!\n");
             continue;
         }
-        if(board[x][y]=='X'){
+
+        if (board[x][y] == 'X') {
             printf("Game Over! You just hit a bomb.\n");
-            Bool = 1;
-        }
-        else{
+            GameNotOver = 1;
+        } else {
             int NumberOfBombs = countAdjacentBombs(board, x, y);
             board[x][y] = (char)(NumberOfBombs + '0');
-            CellsRevealed++; 
+            CellsRevealed++;
 
-            if(CellsRevealed == SIZE*SIZE-BOMBS){
-                printf("Congratulations you won!");
-                Bool = 1;
+            if (CellsRevealed == SIZE * SIZE - BOMBS) {
+                printf("Congratulations, you won!\n");
+                GameNotOver = 1;
             }
         }
     }

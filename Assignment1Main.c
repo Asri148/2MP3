@@ -32,19 +32,15 @@ int CheckValidMove(int x, int y) {
 
 //Function to count the bombs adjacent to a valid location entered by the user if it is not a bomb
 int countAdjacentBombs(char board[SIZE][SIZE], int x, int y) {
-    //Counter for number of bombs is initially zero
-   int counter = 0; 
-   //iterates through rows containing adjacent locations to the nput location
-   for(int i=-1; i<=1; i++) {
-    //iterates through rows containing adjacent locations to the nput location
-    for(int j= -1 ;j <=1; j++) {
-      if(CheckValidMove(x+i, y+j) && board[x+i][y+j]=='X') {
-        //add 1 to the counter if a bomb is found in any adjacent locations
-        counter++;
-      }
+    int counter = 0; 
+    for(int i=-1; i<=1; i++) {
+        for(int j= -1 ;j <=1; j++) {
+            if(CheckValidMove(x+i, y+j) && board[x+i][y+j]=='X') {
+                counter++;
+            }
+        }
     }
-   }
-   return counter; 
+    return counter; 
 }
 
 //Function to construct updated board after every valid attempt
@@ -80,7 +76,7 @@ int main() {
     int Bool = 0;
 
     //Run the game while checking all the necessary conditions to see if the user inputs are valid, and see if the game is over
-    while(Bool=0){
+    while(Bool==0){
         UpdateBoard(board);
         int x,y;
         printf("Welcome to Minesweeper! Let the game begin!");

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 //Define the variables size and bombs that are global variables used throughout the program
 #define SIZE 10
 #define BOMBS 15
@@ -56,16 +57,38 @@ void UpdateBoard(char board[SIZE][SIZE]) {
         //iterate through each column of a given row and print the correspond value at location [row, column]
         for (int y = 0; y < SIZE; y++) {
             if (board[x][y] == 'X') {
-                printf(" -");
+                printf("- ");
             } else if (board[x][y] == '-') {
-                printf(" -");
+                printf("- ");
             } else {
-                printf(" %c", board[x][y]);
+                printf("%c ", board[x][y]);
             }
         }
         printf("\n");
     }
 }
+
+//Function to display final board when the game is over
+void FinalBoard(char board[SIZE][SIZE]){
+   //print the Column headers of the mineswweper board
+    printf("  0 1 2 3 4 5 6 7 8 9\n");
+    //iterate through each row of the board array
+    for (int x = 0; x < SIZE; x++) {
+        //print the row index to help identify each row
+        printf("%d ", x); 
+        //iterate through each column of a given row and print the correspond value at location [row, column]
+        for (int y = 0; y < SIZE; y++) {
+            if (board[x][y] == 'X') {
+                printf("X ");
+            } else if (board[x][y] == '-') {
+                printf("- ");
+            } else {
+                printf("%c ", board[x][y]);
+            }
+        }
+        printf("\n");
+    }
+} 
 
 int main() {
     char board[SIZE][SIZE];
@@ -93,14 +116,13 @@ int main() {
             printf("Invalid Move! Please enter a row and column between 0 to 9 separated by a single space.\n");
             continue;
         }
-
-        if (board[x][y] != '-') {
+        if (board[x][y] != '-' && board[x][y] != 'X') {
             printf("This cell is already revealed!\n");
             continue;
         }
-
         if (board[x][y] == 'X') {
             printf("Game Over! You just hit a bomb.\n");
+            FinalBoard(board);
             GameNotOver = 1;
         } else {
             int NumberOfBombs = countAdjacentBombs(board, x, y);
@@ -109,6 +131,7 @@ int main() {
 
             if (CellsRevealed == SIZE * SIZE - BOMBS) {
                 printf("Congratulations, you won!\n");
+                FinalBoard(board);
                 GameNotOver = 1;
             }
         }

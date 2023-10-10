@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-//Define the variables size and bombs that are global variables used throughout the program
+//Defining the variables size and bombs that are variables used throughout the program
 #define SIZE 10
 #define BOMBS 15
 

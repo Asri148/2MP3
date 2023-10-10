@@ -111,12 +111,13 @@ int main() {
         UpdateBoard(board);
         int x, y;
         //Asks for user input which is the location the user wishes to reveal (a.k.a their move)
-        printf("Enter Row and Column (0 to 9) separated by a space: ");
+        printf("Enter Row and Column (0 to 9) separated by a space (do not enter letters or the game will not function): ");
         scanf(" %d %d", &x, &y);
 
         //Checks if the move made by the user is valid, if not, asks them to enter another move
         if (!CheckValidMove(x, y)) {
-            printf("Invalid Move! Please enter a row and column between 0 to 9 separated by a single space.\n");
+            printf("Invalid Move! Please enter a row and column between 0 to 9 separated by a single space."); 
+            printf("Do not enter letters or the game will not function.\n");
             continue;
         }
         //Checks if the move made by the user is for a cell they have already revealed, if yes, then they are asked to make another move

@@ -10,6 +10,6 @@ int main (){
     while (names [i][length] !='\0'){
         length++;
         }
-    printf ("Name %d: %s ( Length : %d) - After ’\\0’: '%c'\n", i+1, names [i], length, names[i][length]) ;
+    printf ("Name %d: %s ( Length : %d) - After '\\0': '%c'\n", i+1, names [i], length, names[i][length]) ;
     }
 }

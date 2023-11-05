@@ -2,17 +2,13 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     // <YOUR CODE: Handle the possible errors in input data given by the user and say how to execute the code>
-    if (argc != 6)
-    {
+    if (argc != 6){
         printf("Usage: %s <POPULATION SIZE> <MAX GENERATIONS> <crossover rate> <mutate rate> <stop criteria>\n", argv[0]);
         return 1;
     }
-
-    // <YOUR CODE: Assign all inputs given by the user argv[i]> like
-    // POPULATION_SIZE, MAX_GENERATIONS, crossover_rate, mutate_rate, stop_criteria
+    // <YOUR CODE: Assign all inputs given by the user argv[i]>
     int POPULATION_SIZE = atoi(argv[1]);
     int MAX_GENERATIONS = atoi(argv[2]);
     double crossover_rate = atof(argv[3]);
@@ -28,7 +24,6 @@ int main(int argc, char *argv[])
     // the upper bounds of variable
     double Ubound[] = {5.0, 5.0};
     // ###################################################################################
-
 
     // <YOUR CODE: Here make all the initial print outs>
     clock_t start_time, end_time;
@@ -50,8 +45,7 @@ int main(int argc, char *argv[])
     // iteration starts here. The loop continues until MAX_GENERATIONS is reached
     // Or stopping criteria is met
     int best_index = 0; 
-    for (int generation = 0; generation < MAX_GENERATIONS; generation++)
-    {
+    for (int generation = 0; generation < MAX_GENERATIONS; generation++){
         // <YOUR CODE: Compute the fitness values using objective function for
         compute_objective_function(POPULATION_SIZE, NUM_VARIABLES, population, fitness);
 
@@ -59,10 +53,8 @@ int main(int argc, char *argv[])
         // and the stopping criteria>
         double best_fitness = fitness[0];
         int best_index = 0;
-        for (int i = 1; i < POPULATION_SIZE; i++)
-        {
-            if (fitness[i] < best_fitness)
-            {
+        for (int i = 1; i < POPULATION_SIZE; i++){
+            if (fitness[i] < best_fitness){
                 best_fitness = fitness[i];
                 best_index = i;
             }
@@ -71,8 +63,7 @@ int main(int argc, char *argv[])
         printf("Generation %d: Best Fitness = %lf\n", generation, best_fitness);
 
         // Check stopping criteria
-        if (best_fitness < stop_criteria)
-        {
+        if (best_fitness < stop_criteria){
             printf("Stopping criteria met. Best solution found.\n");
             break;
         }
@@ -82,11 +73,7 @@ int main(int argc, char *argv[])
         // <YOUR CODE: Here call the mutation function>
         mutate(POPULATION_SIZE, NUM_VARIABLES, new_population, population, Lbound, Ubound, mutate_rate);
 
-        // Now you have the a new population, and it goes to the beginning of loop to re-compute all again
     }
-
-    // <YOUR CODE: Jump to this part of code if the stopping criteria is met before MAX_GENERATIONS is met>
-
     // ###################################################################################
     // You dont need to change anything here
     // Here we print the CPU time taken for your code
@@ -101,8 +88,7 @@ int main(int argc, char *argv[])
 
     // Print the best solution and objective function value for the best solution
     printf("Best Solution:\n");
-    for (int i = 0; i < NUM_VARIABLES; i++)
-    {
+    for (int i = 0; i < NUM_VARIABLES; i++){
         printf("Variable %d: %lf\n", i, population[best_index][i]);
     }
     printf("Objective Function Value: %lf\n", fitness[best_index]);

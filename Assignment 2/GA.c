@@ -53,10 +53,10 @@ int main(int argc, char *argv[]){
         // and the stopping criteria>
         double best_fitness = fitness[0];
         int best_index = 0;
-        for (int i = 1; i < POPULATION_SIZE; i++){
-            if (fitness[i] < best_fitness){
-                best_fitness = fitness[i];
-                best_index = i;
+        for (int x = 1; x < POPULATION_SIZE; x++){
+            if (fitness[x] < best_fitness){
+                best_fitness = fitness[x];
+                best_index = x;
             }
         }
         // Print the generation number and best fitness value

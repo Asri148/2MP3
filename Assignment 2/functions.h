@@ -1,6 +1,6 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
-// Do know change anything in this file. You will not submit this file
+// Do not change anything in this file. You will not submit this file
 // Here we included the declaration of all functions you need
 
 

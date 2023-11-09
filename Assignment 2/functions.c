@@ -18,9 +18,9 @@ void generate_population(int POPULATION_SIZE, int NUM_VARIABLES, double populati
 {
     // randomly initialize for all values in "population[i][j]""
     srand((unsigned int)time(NULL));
-    for (int i = 0; i < POPULATION_SIZE; ++i){
-        for (int j = 0; j < NUM_VARIABLES; ++j){
-            population[i][j] = generate_random(Lbound[j], Ubound[j]);
+    for (int x = 0; x < POPULATION_SIZE; ++x){
+        for (int y = 0; y < NUM_VARIABLES; ++y){
+            population[x][y] = generate_random(Lbound[x], Ubound[y]);
         }
     }  
 }
@@ -30,8 +30,8 @@ void compute_objective_function(int POPULATION_SIZE, int NUM_VARIABLES, double p
 {
     /* compute "fitness[i]"" for each set of decision variables (individual) or each row in "population"
     by calling "Objective_function" */
-     for (int i = 0; i < POPULATION_SIZE; i++){
-        fitness[i] = Objective_function(NUM_VARIABLES, population[i]);
+     for (int x = 0; x < POPULATION_SIZE; x++){
+        fitness[x] = Objective_function(NUM_VARIABLES, population[x]);
     }
 }
 
@@ -40,24 +40,24 @@ void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION
     /* Implement the logic of crossover function here based on "fitness_probs" or each set
     of decision variables (individual) or each row in "population".
     And save the new population in "new_population"*/
-     for (int i = 0; i < POPULATION_SIZE; i += 2){
+     for (int x = 0; x < POPULATION_SIZE; x += 2){
         if (generate_random(0, 1) < crossover_rate){
             // Perform crossover for individuals with indices i and i+1
             int crossover_point = generate_int() % NUM_VARIABLES;
-            for (int j = 0; j < crossover_point; j++){
-                new_population[i][j] = population[i][j];
-                new_population[i + 1][j] = population[i + 1][j];
+            for (int y = 0; y < crossover_point; y++){
+                new_population[x][y] = population[x][y];
+                new_population[x + 1][y] = population[x + 1][y];
             }
-            for (int j = crossover_point; j < NUM_VARIABLES; j++){
-                new_population[i][j] = population[i + 1][j];
-                new_population[i + 1][j] = population[i][j];
+            for (int y = crossover_point; y < NUM_VARIABLES; y++){
+                new_population[x][y] = population[x + 1][y];
+                new_population[x + 1][y] = population[x][y];
             }
         }
         else{
             // If no crossover, copy parents to the new population
-            for (int j = 0; j < NUM_VARIABLES; j++){
-                new_population[i][j] = population[i][j];
-                new_population[i + 1][j] = population[i + 1][j];
+            for (int y = 0; y < NUM_VARIABLES; y++){
+                new_population[x][y] = population[x][y];
+                new_population[x + 1][y] = population[x + 1][y];
             }
         }
     }
@@ -65,15 +65,15 @@ void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION
 
 void mutate(int POPULATION_SIZE, int NUM_VARIABLES, double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double Lbound[NUM_VARIABLES], double Ubound[NUM_VARIABLES], double mutate_rate){
     /*Implement the logic of mutation on "new_population" and then copy everything into "population"*/
-     for (int i = 0; i < POPULATION_SIZE; i++){
-        for (int j = 0; j < NUM_VARIABLES; j++){
+     for (int x = 0; x < POPULATION_SIZE; x++){
+        for (int y = 0; y < NUM_VARIABLES; y++){
             if (generate_random(0, 1) < mutate_rate){
                 // Mutate the gene
-                new_population[i][j] = generate_random(Lbound[j], Ubound[j]);
+                new_population[x][y] = generate_random(Lbound[x], Ubound[y]);
             }
             else{
                 // Keep the gene unchanged
-                new_population[i][j] = population[i][j];
+                new_population[x][y] = population[x][y];
             }
         }
     }

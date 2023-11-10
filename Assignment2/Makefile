@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -g
 LDFLAGS = -lm
 
 # List of source files
-SRCS = GA.c OF.c functions.c
+SRCS = OF.c functions.c GA.c
 
 # Generate the list of object files by replacing .c with .o in source files
 OBJS = $(SRCS:.c=.o)

@@ -2,6 +2,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "functions.h"
+
 int main(int argc, char *argv[]){
     // <YOUR CODE: Handle the possible errors in input data given by the user and say how to execute the code>
     if (argc != 6){
@@ -39,7 +41,7 @@ int main(int argc, char *argv[]){
     double fitness[POPULATION_SIZE];
     double new_population[POPULATION_SIZE][NUM_VARIABLES];
 
-    // <YOUR CODE: Call generate_population function to initialize the "population"> like:
+    // <YOUR CODE: Call generate_population function to initialize the "population" like:
     generate_population(POPULATION_SIZE, NUM_VARIABLES, population, Lbound, Ubound);
 
     // iteration starts here. The loop continues until MAX_GENERATIONS is reached

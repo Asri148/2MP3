@@ -54,7 +54,6 @@ int main(int argc, char *argv[]){
         // <YOUR CODE: Here implement the logic of finding best solution with minimum fitness value
         // and the stopping criteria>
         double best_fitness = fitness[0];
-        int best_index = 0;
         for (int x = 1; x < POPULATION_SIZE; x++){
             if (fitness[x] < best_fitness){
                 best_fitness = fitness[x];

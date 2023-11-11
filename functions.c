@@ -40,13 +40,13 @@ void compute_objective_function(long POPULATION_SIZE, int NUM_VARIABLES, double 
 //And save the new population in "new_population"
 void crossover(long POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION_SIZE], double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double crossover_rate) 
 {
-    //Calculate total fitness of the population
+    //Calculating total fitness of the population
     double total_fitness = 0.0;
     for (long x = 0; x < POPULATION_SIZE; x++) {
         total_fitness += fitness[x];
     }
 
-    //Calculate probabilities for selection based on fitness
+    //Calculating probabilities for selection based on fitness
     double fitness_probs[POPULATION_SIZE];
     for (long x = 0; x < POPULATION_SIZE; x++) {
         fitness_probs[x] = fitness[x] / total_fitness;
@@ -55,7 +55,7 @@ void crossover(long POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATIO
     long crossover_point; 
     for (long x = 0; x < POPULATION_SIZE; x += 2) {
         if (generate_random(0, 1) < crossover_rate) {
-            //Perform random selection based on fitness probabilities
+            //Performing random selection based on fitness probabilities
             double rand_num1 = generate_random(0, 1);
             double rand_num2 = generate_random(0, 1);
             long parent1 = 0, parent2 = 0;
@@ -72,7 +72,7 @@ void crossover(long POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATIO
                 cumulative_prob += fitness_probs[parent2];
             }
 
-            //Perform crossover for individuals with indices parent1 and parent2
+            //Performing crossover for individuals with indices parent1 and parent2
             crossover_point = generate_int() % NUM_VARIABLES;
             for (int y = 0; y < crossover_point; y++) {
                 new_population[x][y] = population[parent1][y];
@@ -99,11 +99,11 @@ void mutate(long POPULATION_SIZE, int NUM_VARIABLES, double new_population[POPUL
     for (long x = 0; x < POPULATION_SIZE; x++) {
         for (int y = 0; y < NUM_VARIABLES; y++) {
             if (generate_random(0, 1) < mutate_rate) {
-                //Mutate the gene
+                //Mutating the gene
                 new_population[x][y] = generate_random(Lbound[y], Ubound[y]); // Use the correct index for Lbound
             }
             else {
-                //Keep the gene unchanged
+                //If there is no mutation, keep the gene unchanged
                 new_population[x][y] = population[x][y];
             }
         }

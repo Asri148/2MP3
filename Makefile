@@ -1,24 +1,24 @@
 CC = gcc
-CFLAGS = -Wall -std=c99 
+CFLAGS = -Wall -std=c99 -D _USE_MATH_DEFINES  #to ensure that the program uses all definitions in math.h
 LDFLAGS = -lm
 
-# List of source files
+#List of source files
 SOURCES = OF.c functions.c GA.c 
 
-# List of object files to be generated
+#List of object files to be generated
 OBJECTS = $(SOURCES:.c=.o)
 
-# Executable name
+#Executable file name
 EXECUTABLE = GA
 
-# Default target
+#Default target
 all: $(EXECUTABLE)
 
-# Compile source files into object files
+#Compile source files into object files
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Link object files to create the executable
+#Link object files to create the executable
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXECUTABLE) $(LDFLAGS)
 

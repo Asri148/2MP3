@@ -1,6 +1,5 @@
-#include <math.h> 
+#include <math.h>
 #include "functions.h"
-
 // Define M_PI and M_E if not defined
 #ifndef M_PI
 #define M_PI (3.14159265358979323846264338327950288)
@@ -13,6 +12,7 @@
 // Do know change anything in this file. You will not submit this file.
 
 // Define the objective function function for optimization
+
 double Objective_function(int NUM_VARIABLES, double x[NUM_VARIABLES])
 {
     // While the objective function could be anything here it is to minimize Ackley function

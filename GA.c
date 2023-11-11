@@ -12,8 +12,8 @@ int main(int argc, char *argv[]){
         return 1;
     }
     // Assign all inputs given by the user argv[i]>
-    int POPULATION_SIZE = atoi(argv[1]);
-    int MAX_GENERATIONS = atoi(argv[2]);
+    long POPULATION_SIZE = atol(argv[1]);
+    long MAX_GENERATIONS = atol(argv[2]);
     double crossover_rate = atof(argv[3]);
     double mutate_rate = atof(argv[4]);
     double stop_criteria = atof(argv[5]);
@@ -78,8 +78,8 @@ int main(int argc, char *argv[]){
     printf("Lower Bounds: [%.2lf, %.2lf]\n", Lbound[0], Lbound[1]);
     printf("Upper Bounds: [%.2lf, %.2lf]\n\n", Ubound[0], Ubound[1]);
     printf("Number of Variables: %d\n", NUM_VARIABLES);
-    printf("Population Size: %d\n", POPULATION_SIZE);
-    printf("Max Number of Generations: %d\n", MAX_GENERATIONS);
+    printf("Population Size: %ld\n", POPULATION_SIZE);
+    printf("Max Number of Generations: %ld\n", MAX_GENERATIONS);
     printf("Crossover Rate: %.2lf\n", crossover_rate);
     printf("Mutation Rate: %.2lf\n", mutate_rate);
     printf("Stopping Criteria: %.15lf\n", stop_criteria);

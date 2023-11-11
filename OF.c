@@ -1,5 +1,15 @@
 #include <math.h> 
 #include "functions.h"
+
+// Define M_PI and M_E if not defined
+#ifndef M_PI
+#define M_PI (3.14159265358979323846264338327950288)
+#endif
+
+#ifndef M_E
+#define M_E  (2.71828182845904523536028747135266250)
+#endif
+
 // Do know change anything in this file. You will not submit this file.
 
 // Define the objective function function for optimization

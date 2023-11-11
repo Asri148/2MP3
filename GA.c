@@ -61,8 +61,6 @@ int main(int argc, char *argv[]){
                 best_index = x;
             }
         }
-        //Print the generation number and best fitness value
-        printf("Generation %d: Best Fitness = %lf\n", generation, best_fitness);
         //Check stopping criteria
         if (best_fitness < stop_criteria){
             printf("Stopping criteria met. Best solution found.\n");
@@ -75,8 +73,10 @@ int main(int argc, char *argv[]){
     }
     // ###################################################################################
     // Print the input parameters
+    printf("\nGenetic Algorithm initiated\n\n");
+    printf("------------------------------------------------------------\n");
     printf("Lower Bounds: [%.2lf, %.2lf]\n", Lbound[0], Lbound[1]);
-    printf("Upper Bounds: [%.2lf, %.2lf]\n", Ubound[0], Ubound[1]);
+    printf("Upper Bounds: [%.2lf, %.2lf]\n\n", Ubound[0], Ubound[1]);
     printf("Number of Variables: %d\n", NUM_VARIABLES);
     printf("Population Size: %d\n", POPULATION_SIZE);
     printf("Max Number of Generations: %d\n", MAX_GENERATIONS);
@@ -89,13 +89,15 @@ int main(int argc, char *argv[]){
     // Here we print the CPU time taken for your code
     end_time = clock();
     cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+    printf("------------------------------------------------------------");
+    printf("\nResults\n");
     printf("CPU time: %f seconds\n", cpu_time_used);
     // ###################################################################################
     // Print the best solution and objective function value for the best solution
     printf("Best Solution:\n");
     for (int i = 0; i < NUM_VARIABLES; i++){
-        printf("Variable %d: %lf\n", i, population[best_index][i]);
+        printf("Variable %d: %lf\n", i+1, population[best_index][i]);
     }
-    printf("Objective Function Value: %lf\n", fitness[best_index]);
+    printf("Objective Function Value (a.k.a best fitness): %lf\n", fitness[best_index]);
     return 0;
 }

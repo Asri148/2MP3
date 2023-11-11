@@ -1,16 +1,19 @@
-// Include everything necessary here 
+//All the necessary libraries and header file 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <time.h>
 #include "functions.h"
 
-double generate_random(double min, double max){
-    // implement a function to return a value between min and max
+//function to return a value between min and max
+double generate_random(double min, double max)
+{
     return min + (max - min) * ((double)rand() / RAND_MAX);
 }
 
-unsigned int generate_int(){
-    // implement a function to return a random integer value
+// function to return a random integer value
+unsigned int generate_int()
+{
     return rand();
 }
 
@@ -36,12 +39,11 @@ void compute_objective_function(int POPULATION_SIZE, int NUM_VARIABLES, double p
     }
 }
 
- 
+/*Implementation the logic of crossover function here based on "fitness_probs" 
+or each set of decision variables (individual) or each row in "population". 
+//And save the new population in "new_population"*/
 void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION_SIZE], double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double crossover_rate)
 {
-    /* Implement the logic of crossover function here based on "fitness_probs" or each set
-    of decision variables (individual) or each row in "population".
-    And save the new population in "new_population"*/
     // Calculate total fitness of the population
     double total_fitness = 0.0;
     for (int i = 0; i < POPULATION_SIZE; i++)
@@ -60,7 +62,7 @@ void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION
     {
         if (generate_random(0, 1) < crossover_rate)
         {
-            // Perform roulette wheel selection based on fitness probabilities
+            //Perform random selection based on fitness probabilities
             double rand_num1 = generate_random(0, 1);
             double rand_num2 = generate_random(0, 1);
             int parent1 = 0, parent2 = 0;
@@ -79,7 +81,7 @@ void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION
                 cumulative_prob += fitness_probs[parent2];
             }
 
-            // Perform crossover for individuals with indices parent1 and parent2
+            //Perform crossover for individuals with indices parent1 and parent2
             int crossover_point = generate_int() % NUM_VARIABLES;
             for (int j = 0; j < crossover_point; j++)
             {
@@ -94,7 +96,7 @@ void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION
         }
         else
         {
-            // If no crossover, copy parents to the new population
+            //If no crossover, copy parents to the new population
             for (int j = 0; j < NUM_VARIABLES; j++)
             {
                 new_population[i][j] = population[i][j];
@@ -104,9 +106,9 @@ void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION
     }
 }
 
-
-void mutate(int POPULATION_SIZE, int NUM_VARIABLES, double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double Lbound[NUM_VARIABLES], double Ubound[NUM_VARIABLES], double mutate_rate){
-    /*Implement the logic of mutation on "new_population" and then copy everything into "population"*/
+/*Implementation of the logic of mutation on "new_population" and then copy everything into "population"*/
+void mutate(int POPULATION_SIZE, int NUM_VARIABLES, double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double Lbound[NUM_VARIABLES], double Ubound[NUM_VARIABLES], double mutate_rate)
+{
      for (int x = 0; x < POPULATION_SIZE; x++){
         for (int y = 0; y < NUM_VARIABLES; y++){
             if (generate_random(0, 1) < mutate_rate){

@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra  #to ensure that the program uses all definitions in math.h
+CFLAGS = -Wall -Wextra
 LDFLAGS = -lm
 
 #List of source files

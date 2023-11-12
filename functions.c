@@ -16,7 +16,7 @@ unsigned int generate_int() {
 }
 
 //Function to initialize a random population array
-void generate_population(long POPULATION_SIZE, int NUM_VARIABLES, double population[POPULATION_SIZE][NUM_VARIABLES], double Lbound[NUM_VARIABLES], double Ubound[NUM_VARIABLES]) {
+void generate_population(int POPULATION_SIZE, int NUM_VARIABLES, double population[POPULATION_SIZE][NUM_VARIABLES], double Lbound[NUM_VARIABLES], double Ubound[NUM_VARIABLES]) {
     //Randomly initialize for all values in "population[i][j]""
     srand((unsigned int)time(NULL));
     for (long x = 0; x < POPULATION_SIZE; ++x) {
@@ -27,7 +27,7 @@ void generate_population(long POPULATION_SIZE, int NUM_VARIABLES, double populat
 }
 
 //Function to compute the objective function for each member of the population
-void compute_objective_function(long POPULATION_SIZE, int NUM_VARIABLES, double population[POPULATION_SIZE][NUM_VARIABLES], double fitness[POPULATION_SIZE]) {
+void compute_objective_function(int POPULATION_SIZE, int NUM_VARIABLES, double population[POPULATION_SIZE][NUM_VARIABLES], double fitness[POPULATION_SIZE]) {
     //Computing the "fitness[i]" for each set of decision variables (individual) or each row in "population"
     //by calling "Objective_function"
     for (long x = 0; x < POPULATION_SIZE; x++) {
@@ -38,8 +38,7 @@ void compute_objective_function(long POPULATION_SIZE, int NUM_VARIABLES, double 
 //Implementation of the logic of crossover function here based on "fitness_probs"
 //for each set of decision variables (individual) or each row in "population".
 //And save the new population in "new_population"
-void crossover(long POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION_SIZE], double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double crossover_rate) 
-{
+void crossover(int POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATION_SIZE], double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double crossover_rate) {
     //Calculating total fitness of the population
     double total_fitness = 0.0;
     for (long x = 0; x < POPULATION_SIZE; x++) {
@@ -94,8 +93,7 @@ void crossover(long POPULATION_SIZE, int NUM_VARIABLES, double fitness[POPULATIO
 }
 
 //Implementation of the logic of mutation on "new_population" and then copy everything into "population"
-void mutate(long POPULATION_SIZE, int NUM_VARIABLES, double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double Lbound[NUM_VARIABLES], double Ubound[NUM_VARIABLES], double mutate_rate) 
-{
+void mutate(int POPULATION_SIZE, int NUM_VARIABLES, double new_population[POPULATION_SIZE][NUM_VARIABLES], double population[POPULATION_SIZE][NUM_VARIABLES], double Lbound[NUM_VARIABLES], double Ubound[NUM_VARIABLES], double mutate_rate) {
     for (long x = 0; x < POPULATION_SIZE; x++) {
         for (int y = 0; y < NUM_VARIABLES; y++) {
             if (generate_random(0, 1) < mutate_rate) {

@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
         return 1;
     }
     //Assigning all inputs given by the user argv[i]>
-    long POPULATION_SIZE = atol(argv[1]);
-    long MAX_GENERATIONS = atol(argv[2]);
+    int POPULATION_SIZE = atol(argv[1]);
+    int MAX_GENERATIONS = atol(argv[2]);
     double crossover_rate = atof(argv[3]);
     double mutate_rate = atof(argv[4]);
     double stop_criteria = atof(argv[5]);
@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
     int best_index = 0; 
     for (int generation = 0; generation < MAX_GENERATIONS; generation++)
     {
+        //printf("Generation Number: %d\n", generation); 
         //Computinng the fitness values using objective function for
         compute_objective_function(POPULATION_SIZE, NUM_VARIABLES, population, fitness);
 
@@ -82,11 +83,11 @@ int main(int argc, char *argv[])
     printf("Lower Bounds: [%.2lf, %.2lf]\n", Lbound[0], Lbound[1]);
     printf("Upper Bounds: [%.2lf, %.2lf]\n\n", Ubound[0], Ubound[1]);
     printf("Number of Variables: %d\n", NUM_VARIABLES);
-    printf("Population Size: %ld\n", POPULATION_SIZE);
-    printf("Max Number of Generations: %ld\n", MAX_GENERATIONS);
+    printf("Population Size: %d\n", POPULATION_SIZE);
+    printf("Max Number of Generations: %d\n", MAX_GENERATIONS);
     printf("Crossover Rate: %.2lf\n", crossover_rate);
     printf("Mutation Rate: %.2lf\n", mutate_rate);
-    printf("Stopping Criteria: %.15lf\n", stop_criteria);
+    printf("Stopping Criteria: %e\n", stop_criteria);
     // ###################################################################################
     // ###################################################################################
     // You dont need to change anything here
@@ -101,8 +102,8 @@ int main(int argc, char *argv[])
     printf("Best Solution:\n");
     for (int i = 0; i < NUM_VARIABLES; i++)
     {
-        printf("Variable %d: %lf\n", i+1, population[best_index][i]);
+        printf("Variable %d: %e\n", i+1, population[best_index][i]);
     }
-    printf("Objective Function Value (a.k.a best fitness): %lf\n", fitness[best_index]);
+    printf("Objective Function Value (a.k.a best fitness): %e\n", fitness[best_index]);
     return 0;
 }

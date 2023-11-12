@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -std=c99 -D _USE_MATH_DEFINES  #to ensure that the program uses all definitions in math.h
+CFLAGS = -Wall -Wextra  #to ensure that the program uses all definitions in math.h
 LDFLAGS = -lm
 
 #List of source files

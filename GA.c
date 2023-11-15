@@ -102,8 +102,8 @@ int main(int argc, char *argv[])
     printf("Best Solution:\n");
     for (int i = 0; i < NUM_VARIABLES; i++)
     {
-        printf("Variable %d: %e\n", i+1, population[best_index][i]);
+        printf("Variable %d: %f\n", i+1, population[best_index][i]);
     }
-    printf("Objective Function Value (a.k.a best fitness): %e\n", fitness[best_index]);
+    printf("Objective Function Value (a.k.a best fitness): %f\n", fitness[best_index]);
     return 0;
 }

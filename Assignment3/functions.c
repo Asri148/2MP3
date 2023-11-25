@@ -52,11 +52,75 @@ void spmv_csr(const CSRMatrix *A, const double *x, double *y){
     }
 }
 
-//Function to solve the linear system Ax = b
-//void solver(const CSRMatrix *A, const double *b, double *x) {
+//Function to solve the linear system Ax = b - Conjugate Gradient Method
+void solver(const CSRMatrix *A, const double *b, double *x) {
     // Implement your solver algorithm here
-    // ...
-//}
+    int n = A->num_rows;
+
+    // Allocate memory for temporary vectors
+    double *r = (double *)malloc(n * sizeof(double));
+    double *p = (double *)malloc(n * sizeof(double));
+    double *Ap = (double *)malloc(n * sizeof(double));
+
+    // Initialize vectors
+    spmv_csr(A, x, r);  // r = Ax
+    for (int i = 0; i < n; ++i) {
+        r[i] = b[i] - r[i];  // r = b - Ax
+        p[i] = r[i];         // p = r (initially)
+    }
+
+    // Conjugate Gradient iteration
+    const int max_iter = 1000;  // Set a maximum number of iterations
+    const double tolerance = 1e-6;  // Set a tolerance for convergence
+    double alpha, beta;
+    double r_norm, r_norm_old = 1.0;
+
+    for (int iter = 0; iter < max_iter; ++iter) {
+        // Ap = A * p
+        spmv_csr(A, p, Ap);
+
+        // alpha = (r' * r) / (p' * Ap)
+        double r_dot_r = 0.0;
+        double p_dot_Ap = 0.0;
+        for (int i = 0; i < n; ++i) {
+            r_dot_r += r[i] * r[i];
+            p_dot_Ap += p[i] * Ap[i];
+        }
+        alpha = r_dot_r / p_dot_Ap;
+
+        // x = x + alpha * p
+        for (int i = 0; i < n; ++i) {
+            x[i] += alpha * p[i];
+        }
+
+        // r = r - alpha * Ap
+        for (int i = 0; i < n; ++i) {
+            r[i] -= alpha * Ap[i];
+        }
+
+        // Check for convergence
+        r_norm = compute_norm(r, n);
+        if (r_norm < tolerance) {
+            break;  // Convergence achieved
+        }
+
+        // beta = (r_new' * r_new) / (r_old' * r_old)
+        beta = r_norm * r_norm / r_norm_old;
+
+        // p = r + beta * p
+        for (int i = 0; i < n; ++i) {
+            p[i] = r[i] + beta * p[i];
+        }
+
+        // Update the old residual norm
+        r_norm_old = r_norm;
+    }
+
+    // Free temporary vectors
+    free(r);
+    free(p);
+    free(Ap);
+}
 
 // Function to compute the residual r = Ax - b
 void compute_residual(const CSRMatrix *A, const double *x, const double *b, double *r) {

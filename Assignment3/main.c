@@ -23,12 +23,32 @@ int main(int argc, char *argv[]) {
         b[i] = 1.0;
     }
 
-    // <The rest of your code goes here>
+    // Initiating vector x (solution)
+    double *x = (double *)malloc(A.num_cols * sizeof(double));
+    if (x == NULL) {
+        fprintf(stderr, "Memory allocation error for vector x\n");
+        // Handle the error (return or exit)
+        free(b);
+        return 1;
+    }
+    //Initiating all the variables necessary to print CPU time 
+    clock_t start_time, end_time;
+    double cpu_time_used;
+    start_time = clock();
+
+    //Solving Ax=b
+    solver(&A, b, x);
+
+    // Ending timer and computing the time taken to solve Ax=b
+    end_time = clock();
+    cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+
 
     // Print the results
     printf("The matrix name: %s\n", filename);
     printf("The dimension of the matrix: %d by %d\n", A.num_rows, A.num_cols);
     printf("Number of non-zeros: %d\n", A.num_non_zeros);
+    printf("CPU time taken to complete Ax=b: %f seconds\n", cpu_time_used);
 
     // Free allocated memory
     free(A.csr_data);

@@ -6,6 +6,12 @@
 
 int main(int argc, char *argv[]) {
     // <Handle the inputs here>
+    // Handle any error in input
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
+        return 1;
+    }
+    
     const char *filename = argv[1];
 
     CSRMatrix A = {0};  // Initialize all members to zero
@@ -43,18 +49,21 @@ int main(int argc, char *argv[]) {
     end_time = clock();
     cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
 
+    double residual_norm = compute_residual_norm(&A, x, b);
 
     // Print the results
     printf("The matrix name: %s\n", filename);
     printf("The dimension of the matrix: %d by %d\n", A.num_rows, A.num_cols);
     printf("Number of non-zeros: %d\n", A.num_non_zeros);
-    printf("CPU time taken to complete Ax=b: %f seconds\n", cpu_time_used);
+    printf("CPU time taken to solve Ax=b: %f seconds\n", cpu_time_used);
+    printf("Residual Norm: %d\n", residual_norm);
 
     // Free allocated memory
     free(A.csr_data);
     free(A.col_ind);
     free(A.row_ptr);
     free(b);
+    free(x);
 
     return 0;
 }

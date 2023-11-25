@@ -10,9 +10,14 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
         fprintf(stderr, "Error opening file %s\n", filename);
         exit(1);
     }
+
+    // Skip the header lines
+    char line[400];
+    while (fgets(line, sizeof(line), file) != NULL && line[0] == '%') {
+        // Skip comment lines
+    }
     // Read matrix properties
-    // Read matrix properties
-    fscanf(file, "%*s %*s %*s %*s %d %d %d", &(matrix->num_rows), &(matrix->num_cols), &(matrix->num_non_zeros));
+    sscanf(line, "%d %d %d", &(matrix->num_rows), &(matrix->num_cols), &(matrix->num_non_zeros));
 
     // Allocate memory
     matrix->csr_data = (double *)malloc(matrix->num_non_zeros * sizeof(double));
@@ -37,6 +42,7 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
     fclose(file);
 }
 
+//Sparse matrix multiplication 
 void spmv_csr(const CSRMatrix *A, const double *x, double *y){
     for (int i = 0; i < A->num_rows; i++) {
         y[i] = 0.0;

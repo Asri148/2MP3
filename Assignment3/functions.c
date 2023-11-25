@@ -11,12 +11,19 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
         exit(1);
     }
     // Read matrix properties
+    // Read matrix properties
     fscanf(file, "%*s %*s %*s %*s %d %d %d", &(matrix->num_rows), &(matrix->num_cols), &(matrix->num_non_zeros));
 
     // Allocate memory
     matrix->csr_data = (double *)malloc(matrix->num_non_zeros * sizeof(double));
     matrix->col_ind = (int *)malloc(matrix->num_non_zeros * sizeof(int));
     matrix->row_ptr = (int *)malloc((matrix->num_rows + 1) * sizeof(int));
+
+    // Check if memory allocation is successful
+    if (matrix->csr_data == NULL || matrix->col_ind == NULL || matrix->row_ptr == NULL) {
+        fprintf(stderr, "Memory allocation error\n");
+        exit(1);
+    }
 
     // Read matrix entries
     for (int i = 0; i < matrix->num_non_zeros; i++) {

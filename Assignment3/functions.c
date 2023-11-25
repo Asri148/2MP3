@@ -122,32 +122,19 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
     free(Ap);
 }
 
-// Function to compute the norm of the residual vector r = Ax - b
-double compute_residual_norm(const CSRMatrix *A, const double *x, const double *b) {
-    int n = A->num_rows;
-    
-    // Allocate memory for the residual vector
-    double *r = (double *)malloc(n * sizeof(double));
-    if (r == NULL) {
-        fprintf(stderr, "Memory allocation error for residual vector r\n");
-        // Handle the error (return or exit)
-        return -1.0; // Return a negative value to indicate an error
+// Function to compute the residual r = Ax - b
+void compute_residual(const CSRMatrix *A, const double *x, const double *b, double *r) {
+    spmv_csr(A, x, r);  // r = Ax
+    for (int i = 0; i < A->num_rows; ++i) {
+        r[i] -= b[i];   // r = Ax - b
     }
+}
 
-    // Compute the residual vector r = Ax - b
-    spmv_csr(A, x, r);  
-    for (int i = 0; i < n; ++i) {
-        r[i] -= b[i];
-    }
-
-    // Compute the norm of the residual vector
+// Function to compute the norm of a vector
+double compute_norm(const double *vector, int size) {
     double norm = 0.0;
-    for (int i = 0; i < n; ++i) {
-        norm += r[i] * r[i];
+    for (int i = 0; i < size; ++i) {
+        norm += vector[i] * vector[i];
     }
-    norm = sqrt(norm);
-
-    // Free allocated memory for the residual vector
-    free(r);
-    return norm;
+    return sqrt(norm);
 }

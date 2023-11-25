@@ -49,7 +49,22 @@ int main(int argc, char *argv[]) {
     end_time = clock();
     cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
 
-    double residual_norm = compute_residual_norm(&A, x, b);
+    //Allocate memory for the residual vector    
+    double *residual = (double *)malloc(A.num_rows * sizeof(double));
+    if (residual == NULL) {
+        fprintf(stderr, "Memory allocation error for residual vector\n");
+        // Handle the error (return or exit)
+        free(b);
+        free(x);
+        return 1;
+    }
+
+    // Compute the residual vector r = Ax - b
+    compute_residual(&A, x, b, residual);
+
+    // Calculate the norm (magnitude) of the residual vector r
+    double residual_norm = compute_norm(residual, A.num_rows);
+    
 
     // Print the results
     printf("The matrix name: %s\n", filename);

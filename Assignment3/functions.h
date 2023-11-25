@@ -31,7 +31,10 @@ printing the whole vector r might not be a good idea. So
 // Function to solve the linear system Ax = b
 void solver(const CSRMatrix *A, const double *b, double *x);
 
-// Function to compute the norm of the residual r = Ax - b
-double compute_residual_norm(const CSRMatrix *A, const double *x, const double *b);
+// Function to compute the residual r = Ax - b
+void compute_residual(const CSRMatrix *A, const double *x, const double *b, double *r);
+
+// Function to compute the norm of a vector
+double compute_norm(const double *vector, int size);
 
 #endif

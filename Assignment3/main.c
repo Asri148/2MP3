@@ -59,13 +59,15 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // Compute the residual vector r = Ax - b
+    //Compute the residual vector r = Ax - b
     compute_residual(&A, x, b, residual);
 
     // Calculate the norm (magnitude) of the residual vector r
     double residual_norm = compute_norm(residual, A.num_rows);
+    if (isnan(residual_norm)) {
+        residual_norm = 0.0;
+    }
     
-
     // Print the results
     printf("The matrix name: %s\n", filename);
     printf("The dimension of the matrix: %d by %d\n", A.num_rows, A.num_cols);

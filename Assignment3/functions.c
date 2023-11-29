@@ -37,6 +37,7 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
         matrix->row_ptr[i]--;
         matrix->col_ind[i]--;
     }
+    //last index of the row ptr stores the number of non-zero values in the matrix
     matrix->row_ptr[matrix->num_non_zeros] = matrix->num_non_zeros;
 
     fclose(file);
@@ -69,9 +70,9 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
         p[i] = r[i];         // p = r (initially)
     }
 
-    // Conjugate Gradient iteration
-    const int max_iter = 1000;  // Set a maximum number of iterations
-    const double tolerance = 1e-6;  // Set a tolerance for convergence
+    // Conjugate Gradient iteration - defining all necessary variables
+    const int max_iter = 10000;  // Set a maximum number of iterations
+    const double tolerance = 1e-10;  // Set a tolerance for convergence
     double alpha, beta;
     double r_norm, r_norm_old = 1.0;
 
@@ -79,13 +80,14 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
         // Ap = A * p
         spmv_csr(A, p, Ap);
 
-        // alpha = (r' * r) / (p' * Ap)
+        // initializing and calculating the values of r'*r and p'*Ap
         double r_dot_r = 0.0;
         double p_dot_Ap = 0.0;
         for (int i = 0; i < n; ++i) {
             r_dot_r += r[i] * r[i];
             p_dot_Ap += p[i] * Ap[i];
         }
+        // alpha = (r' * r) / (p' * Ap)
         alpha = r_dot_r / p_dot_Ap;
 
         // x = x + alpha * p
@@ -98,9 +100,19 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
             r[i] -= alpha * Ap[i];
         }
 
+        // Check for NaN in vectors
+        for (int i = 0; i < n; ++i) {
+            if (isnan(x[i]) || isnan(r[i]) || isnan(p[i]) || isnan(Ap[i])) {
+                fprintf(stderr, "NaN detected in vectors\n");
+                // Handle the error (return or exit)
+                return;
+            }
+        }
+
         // Check for convergence
         r_norm = compute_norm(r, n);
         if (r_norm < tolerance) {
+            printf("Converged after %d iterations.\n", iter+1);
             break;  // Convergence achieved
         }
 

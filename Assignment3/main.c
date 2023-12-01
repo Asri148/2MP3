@@ -43,37 +43,18 @@ int main(int argc, char *argv[]) {
     start_time = clock();
 
     //Solving Ax=b
-    solver(&A, b, x);
+    double r_norm = solver(&A, b, x);
 
     // Ending timer and computing the time taken to solve Ax=b
     end_time = clock();
     cpu_time_used = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-
-    //Allocate memory for the residual vector    
-    double *residual = (double *)malloc(A.num_rows * sizeof(double));
-    if (residual == NULL) {
-        fprintf(stderr, "Memory allocation error for residual vector\n");
-        // Handle the error (return or exit)
-        free(b);
-        free(x);
-        return 1;
-    }
-
-    //Compute the residual vector r = Ax - b
-    compute_residual(&A, x, b, residual);
-
-    // Calculate the norm (magnitude) of the residual vector r
-    double residual_norm = compute_norm(residual, A.num_rows);
-    if (isnan(residual_norm)) {
-        residual_norm = 0.00000000;
-    }
     
     // Print the results
     printf("The matrix name: %s\n", filename);
     printf("The dimension of the matrix: %d by %d\n", A.num_rows, A.num_cols);
     printf("Number of non-zeros: %d\n", A.num_non_zeros);
     printf("CPU time taken to solve Ax=b: %f seconds\n", cpu_time_used);
-    printf("Residual Norm: %f\n", residual_norm);
+    printf("The Residual Normal: %f", r_norm);
 
     // Free allocated memory
     free(A.csr_data);

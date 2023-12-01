@@ -53,8 +53,25 @@ void spmv_csr(const CSRMatrix *A, const double *x, double *y){
     }
 }
 
+// Function to compute the residual r = Ax - b
+void compute_residual(const CSRMatrix *A, const double *x, const double *b, double *r) {
+    spmv_csr(A, x, r);  // r = Ax
+    for (int i = 0; i < A->num_rows; ++i) {
+        r[i] -= b[i];   // r = Ax - b
+    }
+}
+
+// Function to compute the norm of a vector
+double compute_norm(const double *vector, int size) {
+    double norm = 0.0;
+    for (int i = 0; i < size; ++i) {
+        norm += vector[i] * vector[i];
+    }
+    return sqrt(norm);
+}
+
 //Function to solve the linear system Ax = b - Conjugate Gradient Method
-void solver(const CSRMatrix *A, const double *b, double *x) {
+double solver(const CSRMatrix *A, const double *b, double *x) {
     // Implement your solver algorithm here
     int n = A->num_rows;
 
@@ -63,16 +80,21 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
     double *p = (double *)malloc(n * sizeof(double));
     double *Ap = (double *)malloc(n * sizeof(double));
 
+    // Check for memory allocation errors
+    if (r == NULL || p == NULL || Ap == NULL) {
+        fprintf(stderr, "Memory allocation error\n");
+        exit(1);
+    }
+
     // Initialize vectors
-    spmv_csr(A, x, r);  // r = Ax
+    compute_residual(A, x, b, r);  // r = b - Ax
     for (int i = 0; i < n; ++i) {
-        r[i] = b[i] - r[i];  // r = b - Ax
         p[i] = r[i];         // p = r (initially)
     }
 
     // Conjugate Gradient iteration - defining all necessary variables
-    const int max_iter = 10000;  // Set a maximum number of iterations
-    const double tolerance = 1e-16;  // Set a tolerance for convergence
+    const int max_iter = 100000;  // Set a maximum number of iterations
+    const double tolerance = 1e-16;  // Set a tolerance for convergence 
     double alpha, beta;
     double r_norm, r_norm_old = 1.0;
 
@@ -87,8 +109,12 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
             r_dot_r += r[i] * r[i];
             p_dot_Ap += p[i] * Ap[i];
         }
-        // alpha = (r' * r) / (p' * Ap)
-        alpha = r_dot_r / p_dot_Ap;
+
+        if (fabs(p_dot_Ap) < tolerance) {
+            alpha = 0.0;
+        } else {
+            alpha = r_dot_r / p_dot_Ap;
+        }
 
         // x = x + alpha * p
         for (int i = 0; i < n; ++i) {
@@ -100,19 +126,22 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
             r[i] -= alpha * Ap[i];
         }
 
-        // Check for NaN in vectors
+        // Check for NaN in vectors and set to zero
         for (int i = 0; i < n; ++i) {
             if (isnan(x[i]) || isnan(r[i]) || isnan(p[i]) || isnan(Ap[i])) {
-                fprintf(stderr, "NaN detected in vectors\n");
-                // Handle the error (return or exit)
-                return;
+                fprintf(stderr, "NaN detected in vectors. Setting to zero.\n");
+                x[i] = 0.0;
+                r[i] = 0.0;
+                p[i] = 0.0;
+                Ap[i] = 0.0;
             }
         }
 
         // Check for convergence
         r_norm = compute_norm(r, n);
         if (r_norm < tolerance) {
-            printf("Converged after %d iterations.\n", iter+1);
+            printf("Converged after %d iterations.\n", iter + 1);
+            return(r_norm);
             break;  // Convergence achieved
         }
 
@@ -134,19 +163,3 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
     free(Ap);
 }
 
-// Function to compute the residual r = Ax - b
-void compute_residual(const CSRMatrix *A, const double *x, const double *b, double *r) {
-    spmv_csr(A, x, r);  // r = Ax
-    for (int i = 0; i < A->num_rows; ++i) {
-        r[i] -= b[i];   // r = Ax - b
-    }
-}
-
-// Function to compute the norm of a vector
-double compute_norm(const double *vector, int size) {
-    double norm = 0.0;
-    for (int i = 0; i < size; ++i) {
-        norm += vector[i] * vector[i];
-    }
-    return sqrt(norm);
-}

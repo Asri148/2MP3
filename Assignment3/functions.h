@@ -29,7 +29,7 @@ printing the whole vector r might not be a good idea. So
 */
 
 // Function to solve the linear system Ax = b
-void solver(const CSRMatrix *A, const double *b, double *x);
+double solver(const CSRMatrix *A, const double *b, double *x);
 
 // Function to compute the residual r = Ax - b
 void compute_residual(const CSRMatrix *A, const double *x, const double *b, double *r);

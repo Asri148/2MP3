@@ -129,7 +129,6 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
         // Check for NaN in vectors and set to zero
         for (int i = 0; i < n; ++i) {
             if (isnan(x[i]) || isnan(r[i]) || isnan(p[i]) || isnan(Ap[i])) {
-                fprintf(stderr, "NaN detected in vectors. Setting to zero.\n");
                 x[i] = 0.0;
                 r[i] = 0.0;
                 p[i] = 0.0;
@@ -161,5 +160,6 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
     free(r);
     free(p);
     free(Ap);
+    return(0);
 }
 

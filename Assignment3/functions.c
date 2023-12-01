@@ -72,7 +72,7 @@ void solver(const CSRMatrix *A, const double *b, double *x) {
 
     // Conjugate Gradient iteration - defining all necessary variables
     const int max_iter = 10000;  // Set a maximum number of iterations
-    const double tolerance = 1e-10;  // Set a tolerance for convergence
+    const double tolerance = 1e-16;  // Set a tolerance for convergence
     double alpha, beta;
     double r_norm, r_norm_old = 1.0;
 

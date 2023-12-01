@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
     // Calculate the norm (magnitude) of the residual vector r
     double residual_norm = compute_norm(residual, A.num_rows);
     if (isnan(residual_norm)) {
-        residual_norm = 0.0;
+        residual_norm = 0.00000000;
     }
     
     // Print the results

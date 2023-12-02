@@ -139,6 +139,7 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
         // Check for convergence
         r_norm = compute_norm(r, n);
         if (r_norm < tolerance) {
+            printf("Converged after %d iterations", iter+1);
             return(r_norm);
             break;  // Convergence achieved
         }

@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Memory allocation error for vector b\n");
         // Handle the error (return or exit)
     }
-
     // Set all elements of b to 1
     for (int i = 0; i < A.num_rows; ++i) {
         b[i] = 1.0;
@@ -55,7 +54,7 @@ int main(int argc, char *argv[]) {
     printf("Number of non-zeros: %d\n", A.num_non_zeros);
     printf("CPU time taken to solve Ax=b: %f seconds\n", cpu_time_used);
     printf("The Residual Normal: %f", r_norm);
-
+    
     // Free allocated memory
     free(A.csr_data);
     free(A.col_ind);

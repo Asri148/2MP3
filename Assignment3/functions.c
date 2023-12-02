@@ -16,7 +16,7 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
     while (fgets(line, sizeof(line), file) != NULL && line[0] == '%') {
         // Skip comment lines
     }
-    // Read matrix properties
+    // Read matrix properties that are provied in the first readable line of the .mtx file
     sscanf(line, "%d %d %d", &(matrix->num_rows), &(matrix->num_cols), &(matrix->num_non_zeros));
 
     // Allocate memory
@@ -72,7 +72,6 @@ double compute_norm(const double *vector, int size) {
 
 //Function to solve the linear system Ax = b - Conjugate Gradient Method
 double solver(const CSRMatrix *A, const double *b, double *x) {
-    // Implement your solver algorithm here
     int n = A->num_rows;
 
     // Allocate memory for temporary vectors
@@ -94,7 +93,7 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
 
     // Conjugate Gradient iteration - defining all necessary variables
     const int max_iter = 100000;  // Set a maximum number of iterations
-    const double tolerance = 1e-16;  // Set a tolerance for convergence 
+    const double tolerance = 1e-25;  // Set a tolerance for convergence 
     double alpha, beta;
     double r_norm, r_norm_old = 1.0;
 
@@ -162,4 +161,3 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
     free(Ap);
     return(0);
 }
-

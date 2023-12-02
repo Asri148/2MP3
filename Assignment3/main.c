@@ -10,8 +10,9 @@ int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
         return 1;
+    }else{
+        printf("file accepted");
     }
-
     const char *filename = argv[1];
 
     CSRMatrix A = {0};  // Initialize all members to zero
@@ -61,6 +62,5 @@ int main(int argc, char *argv[]) {
     free(A.row_ptr);
     free(b);
     free(x);
-
     return 0;
 }

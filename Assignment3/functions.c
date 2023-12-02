@@ -22,7 +22,7 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
     // Allocate memory
     matrix->csr_data = (double *)malloc(matrix->num_non_zeros * sizeof(double));
     matrix->col_ind = (int *)malloc(matrix->num_non_zeros * sizeof(int));
-    matrix->row_ptr = (int *)malloc((matrix->num_rows + 1) * sizeof(int));
+    matrix->row_ptr = (int *)malloc((matrix->num_non_zeros + 1) * sizeof(int));
 
     // Check if memory allocation is successful
     if (matrix->csr_data == NULL || matrix->col_ind == NULL || matrix->row_ptr == NULL) {
@@ -32,13 +32,14 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
 
     // Read matrix entries
     for (int i = 0; i < matrix->num_non_zeros; i++) {
-        fscanf(file, "%d %d %lf", &(matrix->row_ptr[i]), &(matrix->col_ind[i]), &(matrix->csr_data[i]));
-        // Matrix market format is 1-based index, convert to 0-based index
-        matrix->row_ptr[i]--;
-        matrix->col_ind[i]--;
+        if (fscanf(file, "%d %d %lf", &(matrix->row_ptr[i]), &(matrix->col_ind[i]), &(matrix->csr_data[i])) != 3) {
+            fprintf(stderr, "Error reading matrix entry #%d from file %s\n", i + 1, filename);
+            fclose(file);
+            exit(1);
+        }
     }
     //last index of the row ptr stores the number of non-zero values in the matrix
-    matrix->row_ptr[matrix->num_non_zeros] = matrix->num_non_zeros;
+    matrix->row_ptr[matrix->num_rows] = matrix->num_non_zeros;
 
     fclose(file);
 }
@@ -138,7 +139,6 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
         // Check for convergence
         r_norm = compute_norm(r, n);
         if (r_norm < tolerance) {
-            printf("Converged after %d iterations.\n", iter + 1);
             return(r_norm);
             break;  // Convergence achieved
         }
@@ -146,7 +146,7 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
         // beta = (r_new' * r_new) / (r_old' * r_old)
         beta = r_norm * r_norm / r_norm_old;
 
-        // p = r + beta * p
+        // p = r + beta * p - update the search direction 
         for (int i = 0; i < n; ++i) {
             p[i] = r[i] + beta * p[i];
         }

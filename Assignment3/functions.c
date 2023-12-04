@@ -63,12 +63,12 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
 void spmv_csr(const CSRMatrix *A, const double *x, double *y) {
     for (int i = 0; i < A->num_rows; i++) {
         y[i] = 0.0;
-        // A->row_ptr[i] is the starting index of the i-th row in the col_ind and csr_data arrays
-        // A->row_ptr[i + 1] indicates the end of the i-th row (the starting index of the next row)
+        // A->row_ptr[i] is the starting index of the ith row in the col_ind and csr_data arrays
+        // A->row_ptr[i + 1] indicates the end of the ith row (the starting index of the next row)
         for (int j = A->row_ptr[i]; j < A->row_ptr[i + 1]; j++) {
             y[i] += A->csr_data[j] * x[A->col_ind[j]];
         }
-        // Multiplies the non-zero element A->csr_data[j] from the matrix by the corresponding value in 
+        // Multiplies the non-zero element A->csr_data[j] from the matrix to the corresponding value in 
         //the vector x at index A->col_ind[j]
     }
 }

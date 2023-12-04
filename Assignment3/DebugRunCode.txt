@@ -1,4 +1,12 @@
     Basic Code Debugs:
+
+    File Reading debug:
+    // File reading check:
+    else
+    {
+        printf("file accepted\n");
+    }
+--------------------------------------
     //multiplication debug:
     double *residual = (double *)malloc(A.num_rows * sizeof(double));
     spmv_csr(&A, b, residual);
@@ -6,15 +14,16 @@
     {
         printf("A*x[%u]=%lf\n", i, residual[i]);
     }
-
-    //matrix Reading dubug:
+--------------------------------------
+    CSR Matrix reading checker: 
+    //Print the Row Pointer
     printf("Row Pointer: ");
     for (int i = 0; i < A.num_rows + 1; i++)
         printf("%d ", A.row_ptr[i]);
     printf("\n");
 
     // Print the column index
-    printf("Column Index: ");
+    printf("Column Index (adjusted to begin from zero): ");
     for (int i = 0; i < A.num_non_zeros; i++)
         printf("%d ", A.col_ind[i]);
     printf("\n");
@@ -24,13 +33,13 @@
     for (int i = 0; i < A.num_non_zeros; i++)
         printf("%0.4f ", A.csr_data[i]);
     printf("\n");
-
-    //vector b debug
+------------------------------------------
+    vector b debug:
     printf("Vector b:\n");
     for (int i = 0; i < A.num_rows; ++i) {
         printf("%f\n", b[i]);
     }
-
+------------------------------------------
     //Terminal Syntax to use Valgrind, gdb and VTune:
     Valgrind: valgrind ./main.c b1_ss.mtx
     VTune:vtune -collect hotspots ./your_application
@@ -39,9 +48,5 @@
     break <filename.c:line#
     continue (to run past break)
     run <input file>
-    quit
-
-
-
-    
+    quit  
     

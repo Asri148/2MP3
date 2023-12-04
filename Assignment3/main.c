@@ -6,38 +6,17 @@
 
 int main(int argc, char *argv[])
 {
-    // <Handle the inputs here>
     // Handle any error in input
     if (argc != 2)
     {
         fprintf(stderr, "Usage: %s <filename>\n", argv[0]);
         return 1;
     }
-    else
-    {
-        printf("file accepted");
-    }
+    //Read the file
     const char *filename = argv[1];
 
     CSRMatrix A = {0}; // Initialize all members to zero
     ReadMMtoCSR(filename, &A);
-
-    printf("Row Pointer: ");
-    for (int i = 0; i < A.num_rows + 1; i++)
-        printf("%d ", A.row_ptr[i]);
-    printf("\n");
-
-    // Print the column index
-    printf("Column Index: ");
-    for (int i = 0; i < A.num_non_zeros; i++)
-        printf("%d ", A.col_ind[i]);
-    printf("\n");
-
-    // Print the values
-    printf("Values: ");
-    for (int i = 0; i < A.num_non_zeros; i++)
-        printf("%0.4f ", A.csr_data[i]);
-    printf("\n");
 
     // Initializing vector b (in Ax=b)
     double *b = (double *)malloc(A.num_rows * sizeof(double));

@@ -5,22 +5,25 @@
 #include "functions.h"
 
 void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
+    //Open the .mtx file given as input in reading mode and if that file does 
+    //not exist print an error message and exit
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         fprintf(stderr, "Error opening file %s\n", filename);
         exit(1);
     }
 
-    // Skip the header lines
+    // Skip the header lines in the .mtx file
     char line[400];
     while (fgets(line, sizeof(line), file) != NULL && line[0] == '%') {
-        // Skip comment lines
+        // Skip any commented lines .mtx line 
     }
 
     // Read matrix properties from the first readable line of the .mtx file
     sscanf(line, "%d %d %d", &(matrix->num_rows), &(matrix->num_cols), &(matrix->num_non_zeros));
 
-    // Allocate memory
+    // Allocate memory to the 3 arrays thet store the non-zero values, the column indecies corresponding with those non-zero values 
+    //and the row pointer --> inidcates the start of a new row as corresponding to the non-zero elements 
     matrix->csr_data = (double *)malloc(matrix->num_non_zeros * sizeof(double));
     matrix->col_ind = (int *)malloc(matrix->num_non_zeros * sizeof(int));
     matrix->row_ptr = (int *)malloc((matrix->num_rows + 1) * sizeof(int));

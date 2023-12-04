@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
         free(b);
         return 1;
     }
+    
     // Initiating all the variables necessary to print CPU time
     clock_t start_time, end_time;
     double cpu_time_used;

@@ -16,13 +16,14 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
     while (fgets(line, sizeof(line), file) != NULL && line[0] == '%') {
         // Skip comment lines
     }
-    // Read matrix properties that are provied in the first readable line of the .mtx file
+
+    // Read matrix properties from the first readable line of the .mtx file
     sscanf(line, "%d %d %d", &(matrix->num_rows), &(matrix->num_cols), &(matrix->num_non_zeros));
 
     // Allocate memory
     matrix->csr_data = (double *)malloc(matrix->num_non_zeros * sizeof(double));
     matrix->col_ind = (int *)malloc(matrix->num_non_zeros * sizeof(int));
-    matrix->row_ptr = (int *)malloc((matrix->num_non_zeros + 1) * sizeof(int));
+    matrix->row_ptr = (int *)malloc((matrix->num_rows + 1) * sizeof(int));
 
     // Check if memory allocation is successful
     if (matrix->csr_data == NULL || matrix->col_ind == NULL || matrix->row_ptr == NULL) {
@@ -30,27 +31,45 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix){
         exit(1);
     }
 
-    // Read matrix entries
+    // Initialize row_ptr to zeros
+    for (int i = 0; i <= matrix->num_rows; i++) {
+        matrix->row_ptr[i] = 0;
+    }
+
+    int row, col;
+    double value;
+
     for (int i = 0; i < matrix->num_non_zeros; i++) {
-        if (fscanf(file, "%d %d %lf", &(matrix->row_ptr[i]), &(matrix->col_ind[i]), &(matrix->csr_data[i])) != 3) {
+        if (fscanf(file, "%d %d %lf", &row, &col, &value) != 3) {
             fprintf(stderr, "Error reading matrix entry #%d from file %s\n", i + 1, filename);
             fclose(file);
             exit(1);
         }
-    }
-    //last index of the row ptr stores the number of non-zero values in the matrix
-    matrix->row_ptr[matrix->num_rows] = matrix->num_non_zeros;
+        // Fill data and col_ind arrays
+        matrix->csr_data[i] = value;
+        matrix->col_ind[i] = col - 1; // Adjust for 0-based indexing
 
-    fclose(file);
+        // Increment count for the current row
+        matrix->row_ptr[row]++;
+    }
+    // Calculate the cumulative sum to get the final row_ptr (at the end of reading each row)
+    for (int i = 1; i <= matrix->num_rows; i++) {
+        matrix->row_ptr[i] += matrix->row_ptr[i - 1];
+    }
+    fclose(file);  
 }
 
 //Sparse matrix multiplication 
-void spmv_csr(const CSRMatrix *A, const double *x, double *y){
+void spmv_csr(const CSRMatrix *A, const double *x, double *y) {
     for (int i = 0; i < A->num_rows; i++) {
         y[i] = 0.0;
+        // A->row_ptr[i] is the starting index of the i-th row in the col_ind and csr_data arrays
+        // A->row_ptr[i + 1] indicates the end of the i-th row (the starting index of the next row)
         for (int j = A->row_ptr[i]; j < A->row_ptr[i + 1]; j++) {
             y[i] += A->csr_data[j] * x[A->col_ind[j]];
         }
+        // Multiplies the non-zero element A->csr_data[j] from the matrix by the corresponding value in 
+        //the vector x at index A->col_ind[j]
     }
 }
 
@@ -139,7 +158,7 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
         // Check for convergence
         r_norm = compute_norm(r, n);
         if (r_norm < tolerance) {
-            printf("Converged after %d iterations", iter+1);
+            printf("Converged after %d iterations \n", iter+1);
             return(r_norm);
             break;  // Convergence achieved
         }

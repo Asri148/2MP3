@@ -27,8 +27,15 @@ This shows how much x values you found are accurate, but
 printing the whole vector r might not be a good idea. So
 3. A function called compute_norm to compute the norm of vector residual
 */
+typedef struct {
+    int row;
+    int column;
+    double val;
+} Entries;
 
-// Function to solve the linear system Ax = b
+//Sort the matrix (Additional function)
+int compare_entries(const void *a, const void *b);
+
 double solver(const CSRMatrix *A, const double *b, double *x);
 
 // Function to compute the residual r = Ax - b

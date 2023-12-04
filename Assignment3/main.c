@@ -18,6 +18,24 @@ int main(int argc, char *argv[])
     CSRMatrix A = {0}; // Initialize all members to zero
     ReadMMtoCSR(filename, &A);
 
+    //Print the Row Pointer
+    printf("Row Pointer: ");
+    for (int i = 0; i < A.num_rows + 1; i++)
+        printf("%d ", A.row_ptr[i]);
+    printf("\n");
+
+    // Print the column index
+    printf("Column Index (adjusted to begin from zero): ");
+    for (int i = 0; i < A.num_non_zeros; i++)
+        printf("%d ", A.col_ind[i]);
+    printf("\n");
+
+    // Print the values
+    printf("Values: ");
+    for (int i = 0; i < A.num_non_zeros; i++)
+        printf("%0.4f ", A.csr_data[i]);
+    printf("\n");
+
     // Initializing vector b (in Ax=b)
     double *b = (double *)malloc(A.num_rows * sizeof(double));
     if (b == NULL)

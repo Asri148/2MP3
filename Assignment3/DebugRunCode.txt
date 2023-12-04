@@ -1,4 +1,4 @@
-    Basic Code Debugs:
+Basic Code Debugs:
 
     File Reading debug:
     // File reading check:
@@ -40,9 +40,15 @@
         printf("%f\n", b[i]);
     }
 ------------------------------------------
+    Check that norm is being calculated:
+    printf("norm \n: %lf", r_norm);
+------------------------------------------
+
     //Terminal Syntax to use Valgrind, gdb and VTune:
     Valgrind: valgrind ./main.c b1_ss.mtx
+
     VTune:vtune -collect hotspots ./your_application
+
     gdb:
     gdb ./your_program
     break <filename.c:line#

@@ -5,14 +5,16 @@
 #include "functions.h"
 
 
-// Comparison function for qsort
-int compare_entries_values(const void *a, const void *b) {
-    return ((Entries *)a)->row == ((Entries *)b)->row ?
-           ((Entries *)a)->column - ((Entries *)b)->column :
-           ((Entries *)a)->row - ((Entries *)b)->row;
+//Comparison function for qsort to sort the column indecies to match the row_ptr array - Used in ReadMMtoCSR
+int comp_entries_values(const void *a, const void *b) {
+    return ((Vals *)a)->row == ((Vals *)b)->row ?
+           ((Vals *)a)->column - ((Vals *)b)->column :
+           ((Vals *)a)->row - ((Vals *)b)->row;
 }
 
+//Read .mtx file to CSR format
 void ReadMMtoCSR(const char *filename, CSRMatrix *matrix) {
+    //open file and if there is an error exit
     FILE *file = fopen(filename, "r");
 
     if (file == NULL) {
@@ -20,11 +22,13 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix) {
         exit(1);
     }
 
+    //Skip all header lines 
     char line[400];
     while (fgets(line, sizeof(line), file) != NULL && line[0] == '%') {
         // Skip any commented lines in the .mtx file
     }
 
+    //Store the matrix properties from the first line in the .mtx file and if there is an error exit
     sscanf(line, "%d %d %d", &(matrix->num_rows), &(matrix->num_cols), &(matrix->num_non_zeros));
 
     matrix->csr_data = (double *)malloc(matrix->num_non_zeros * sizeof(double));
@@ -36,11 +40,11 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix) {
         exit(1);
     }
 
-    // Initialize row_ptr to zeros
+    //Initialize variables to use in fscanf
     int row, col;
     double value;
 
-    // Read all non-zero matrix entries
+    //Read all non-zero matrix entries and if there is an error exit
     for (int i = 0; i < matrix->num_non_zeros; i++) {
         if (fscanf(file, "%d %d %lf", &row, &col, &value) != 3) {
             fprintf(stderr, "Error reading matrix entry #%d from file %s\n", i + 1, filename);
@@ -53,27 +57,31 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix) {
         matrix->row_ptr[row]++;
     }
 
-    // Calculate the cumulative sum to get the final row_ptr (at the end of reading each row)
+    //Calculate the cumulative sum to get the final row_ptr (at the end of reading each row)
     for (int i = 1; i <= matrix->num_rows; i++) {
         matrix->row_ptr[i] += matrix->row_ptr[i - 1];
     }
 
-    // Create an array of Entry structures to store matrix entries temporarily
-    Entries *entries = (Entries *)malloc(matrix->num_non_zeros * sizeof(Entries));
+    //Create an array of Entry structures to store matrix entries temporarily and if there is an error exit
+    Vals *entries = (Vals *)malloc(matrix->num_non_zeros * sizeof(Vals));
 
     if (entries == NULL) {
         fprintf(stderr, "Memory allocation error\n");
         exit(1);
     }
 
-    // Read all non-zero matrix entries again to populate the entries array
-    fseek(file, 0, SEEK_SET);  // Reset file pointer to the beginning
+    //Read all non-zero matrix entries again to fill the entries array
+    fseek(file, 0, SEEK_SET);  //Reset file pointer to the beginning
 
+    //Skip all header lines 
     while (fgets(line, sizeof(line), file) != NULL && line[0] == '%') {
-        // Skip any commented lines in the .mtx file
+        //Skip any commented lines in the .mtx file
     }
 
+    //For the number of non-zero values in the matrix store the values in 
+    //their respective properties in the entries structure
     for (int i = 0; i < matrix->num_non_zeros; i++) {
+        //If there is an error in reading the .mtx file exit
         if (fscanf(file, "%d %d %lf", &row, &col, &value) != 3) {
             fprintf(stderr, "Error reading matrix entry #%d from file %s\n", i + 1, filename);
             fclose(file);
@@ -82,21 +90,23 @@ void ReadMMtoCSR(const char *filename, CSRMatrix *matrix) {
 
         entries[i].row = row;
         entries[i].column = col-1;
-        entries[i].val = value;
+        entries[i].value = value;
     }
 
+    //Close the opened file
     fclose(file);
 
-    // Sort entries based on row-major order
-    qsort(entries, matrix->num_non_zeros, sizeof(Entries), compare_entries_values);
+    //Sort entries based on row order to patch with the enties in row_ptr
+    qsort(entries, matrix->num_non_zeros, sizeof(Vals), comp_entries_values);
 
-    // Rearrange the data to store it row-wise
+    //Rearrange the data to store it according to row
     for (int i = 0; i < matrix->num_non_zeros; i++) {
         matrix->col_ind[i] = entries[i].column;
-        matrix->csr_data[i] = entries[i].val;
+        matrix->csr_data[i] = entries[i].value;
     }
 
-    free(entries);  // Free memory for temporary structures
+    //Free memory for temporary structures
+    free(entries);  
 }
 
 //Sparse matrix multiplication 
@@ -158,7 +168,7 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
 
     // For Conjugate Gradient Method iteration(s) - defining all necessary variables
     const int max_iter = 100000;  // Set a maximum number of iterations
-    const double tolerance = 1e-25;  // Set a tolerance for convergence - if the magnitude of the residual is less than this tolerence the system is considered solved
+    const double tolerance = 1e-15;  // Set a tolerance for convergence - if the magnitude of the residual is less than this tolerence the system is considered solved
     double alpha, beta;
     double r_norm, r_norm_old = 1.0; 
 
@@ -189,16 +199,6 @@ double solver(const CSRMatrix *A, const double *b, double *x) {
         //Updating the residual vector r
         for (int i = 0; i < n; ++i) {
             r[i] -= alpha * Ap[i]; //r = r - alpha * Ap
-        }
-
-        //Checking for NaN in vectors and setting them equal to zero - This is only a check
-        for (int i = 0; i < n; ++i) {
-            if (isnan(x[i]) || isnan(r[i]) || isnan(p[i]) || isnan(Ap[i])) {
-                x[i] = 0.0;
-                r[i] = 0.0;
-                p[i] = 0.0;
-                Ap[i] = 0.0;
-            }
         }
 
         //Check for convergence 

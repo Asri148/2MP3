@@ -30,8 +30,8 @@ printing the whole vector r might not be a good idea. So
 typedef struct {
     int row;
     int column;
-    double val;
-} Entries;
+    double value;
+} Vals;
 
 //Sort the matrix (Additional function)
 int compare_entries(const void *a, const void *b);
